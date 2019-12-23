@@ -1,0 +1,132 @@
+Asserts -> comparacao de valores
+
+    Assert.assertEquals(expected, actual);
+        * pode haver um primeiro parametro com uma mensagem de erro
+        * para comparacoes de double, é necessario informar a precisao 
+            que sera analisado (após actual)
+        * inteiros com Integer é preciso fazer a conversao
+            Integer.valueOf(int) || num.intValue
+        * para strings: ignoreCase para palavras que não importa maiusculo/minusculo
+                        .startsWith(inicio_da_palavra) //comparacao com like inicial
+        * objetos:  se não houver o metodo equals na classe, sera comparado o endereco
+
+    Assert.assertTrue(boolean);  //verdadeiro se o retorno for TRUE
+    Assert.assertFalse(boolean); //verdadeiro se o retorno for FALSE
+
+    Assert.assertSame(obj1, obj2); //comparacao de enderecos
+
+    Assert.assertNull(obj); //Verifica se o objeto esta nulo
+
+    Assert.assertThat(actual, CoreMatchers.is(expected)); //alternativa para equals
+                                            not
+Anotações
+
+    @Rule
+        ErrorCollector error = new ErrorCollector();
+        ...
+        error.Assert... //se houver mais de um erro, mostrará todos na pilha
+
+        public ExpectedException exception = ExpectedException.none();
+        ...
+        exception.expected(Exception.class);
+        exception.expectedMessage("");      //antes do metodo que vai lancar a exception
+    
+    @Test(expected = Exception.class) 
+    public void nomeTest() throws Exception{} //avisa que uma exception sera lancada
+
+    @Test
+    public void nomeTest(){} // uso do try/catch para captura 
+            ... Assert.fail(); //apos o metodo que vai lancar a exception
+            ... assertThat(e.getMessage(), is("msg")); // dentro do catch 
+    
+    @Before //antes de cada teste vai ser executado
+    public static void nomeMetodo(){}
+
+    @After //apos
+
+    @FixMethodOrder(MethodSorters.NAME_ASCENDING) //Garante que os testes serao 
+                                                    executados em ordem alfabetica.
+
+    @Ignore //Não executa o teste
+
+
+Ferramentas
+
+    Teste condicional: Assume.assumeFalse ( condition ); //baseado na condicao é executado
+    
+    Percentual de aceitação/cobertura (plugin): eclemma //aceitavel: > 85%
+
+
+Simplificação
+
+    DDT (Data Driven Test) - Teste Orientado a Dados
+
+        @RunWith(Parameterized.class) //antes da class
+
+        @Parameters //Informa ao JUnit que o método será a fonte de Dados
+                        para o teste. Deve ser static.
+
+            @Parameters(name="Teste {index} = {0}) // define a mensagem de resultado do 
+                                                        teste baseado no parâmetro.
+                                                          
+        @Parameter(value=1) //Indica a ordem dos parametros. O primeiro não
+                                é necessário, começa em 0 (index). 
+                                O atributo deve ser public.
+    
+    Matcher's ->  segundo parâmetro do assert
+                para criar deve estender de TypeSafeMatcher (org.hamcrest.Description)
+
+    Builder -> cria a instância de um objeto
+                *construtor privado 
+                    private FilmeBuilder() {}
+                *atributos do builder: classe analisada (Usuario, Filme, Locacao)
+                    public static FilmeBuilder umFilme(){ sets... }
+                *inserção de dados via public static retornando o builder
+                *um metodo para retornar a instancia (this)
+
+                *refatoracao    #De: new Usuario();
+                                #Para: UsuarioBuilder.umUsuario.agora();
+
+Mockito
+
+    var = .mock(ClasseDeSimulacao.class); //simula o comportamento da classe
+
+    when( metodo-analisado ).thenReturn( definicao-de-retorno ) //parte do cenario
+    service.metodo() //mock
+    verify( obj ).metodo() //indica que o servico realizou com sucesso 
+
+    -> Verificação de exceptions
+        Deve estar depois de when/thenReturn e antes da chamada do service
+        exception.expect(Exception.class)
+        exception.expectMessage ("msg")
+
+    -> Na chamada de when/thenReturn pode ser usado parâmetros genéricos (Matchers)
+            Mockito.eq( valor )  //fixa um valor no parâmetro
+            Mockito.any( obj )   //aceita qualquer entrada na invocação do método (ação)
+                    any: aplicável para qualquer tipo, objetos ou classes.
+
+    -> Mockito.times( tam ) //quantos serão lidos/esperados 
+    -> Mockito.never //nunca deve acontecer
+    -> Mockito.verifyNoMoreInteractions( objMock ) //em um método com intereção, garante 
+                                                        que todas foram realizados
+
+    Anotações
+
+        InjectMocks -> classe de servico que será usada
+        Mock -> Dependências da classe de injeção
+
+        @Before   //instanciação da classe injetada
+        public void setup(){
+            MockitoAnnotations.initMocks(this);
+        }
+    
+    Capturando valores de chamada de método
+
+        -> ArgumentCaptor<classe-a-ser-capturada> argCap = ArgumentCaptor.forClass(Classe.class)
+
+            Mockito.verify( obj ).metodo(argCap.capture);
+
+            Classe retorno = argCap.getValue(); //retorna um valor capturado
+                                                // retornar todos: getAllValues()
+
+            assertThat(retorno.getAtributo(), is(valor));
