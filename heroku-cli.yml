@@ -1,0 +1,31 @@
+TODO: :*********COMANDOS HEROKU CLI*************:
+
+
+>>>>>>> Variáveis de ambiente <<<<<<<
+
+heroku config : variaveis e valores atuais
+heroku config:get GITHUB_USERNAME : buscar um valor da variavel
+heroku config:set GITHUB_USERNAME=joesmith : criando variável
+heroku config:unset GITHUB_USERNAME : removendo variável
+
+>>>>>>> Deploy <<<<<<<
+
+heroku releases : versões de deploy
+heroku releases:info v14 : informações detalhadas
+heroku releases:rollback v102 : reverter uma versão
+git log -n 1 hash: verificar os commits da release (hash é um um parâmetro)
+
+>>>>>>> Monitoramento <<<<<<<
+
+heroku logs --tail: vizualizar logs em tempo real do dynos.
+heroku logs --ps nome_dyno --tail :  vizualizar um dyno específico (nome_dyno é um parametro).
+
+>>>>>>> Escala e processos (threds) <<<<<<<
+
+heroku ps : processos que estão sendo executados.
+heroku ps:scale web=2 worker=4 clock=1 : Definindo quantidade de threds para cada dyno
+heroku ps:stop nome_processo : parar um dos processos listados em 'heroku ps'
+heroku ps:restart : reiniciar todos os dynos
+heroku ps:restart nome_processo : reiniciar dyno específico
+
+heroku run bash : abrir o terminal do dyno
