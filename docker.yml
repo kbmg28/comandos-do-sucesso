@@ -1,0 +1,97 @@
+TODO: :********* COMANDOS DOCKER *************:
+
+>>>>>>> CONCEITOS <<<<<<<
+
+DOCKER: ferramente de criação e administração de ambientes.
+IMAGES: configuração especificada  do ambiente
+CONTAINER: ambiente de aplicação
+VOLUMES: Docker host que possibilita criar um link entre uma pasta do container 
+          e uma pasta local. Garante o acesso aos dados mesmo com o container parado.
+
+>>>>>>> IMAGES <<<<<<<
+
+  docker images : verifica quais images existem na máquina
+  docker rmi IMAGE: apaga uma imagem 
+
+  Criação de uma imagem:
+    >> Deve ser criado uma arquivo Dockerfile. Para mais de uma, utilizar: nome.dockerfile <<
+    
+  COMANDOS: 
+      FROM _NAME_REPOSITORY_:VERSION : repositório base da imagem. Se a versão não for informada, será a mais recente
+      MAINTAINER _NAME_: nome do autor da imagem
+      ENV KEY=VALUE : variáveis de ambiente.
+      COPY . CAMINHO_CONTAINER : carrega todos os arquivos da pasta.
+      WORKDIR CAMINHO_CONTAINER : inicia o container na pasta informada.
+      RUN COMANDO : executar um comando no momento que o container está subindo.
+      ENTRYPOINT COMANDO : primeira ação depois que o container for carregado
+      EXPOSE PORTA : disponibiliza uma porta externa para o container.
+  
+  docker build -f Dockerfile -t USER_NAME/IMAGE_NAME .   : gera uma imagem com todos os arquivos da pasta.
+  docker build -f CAMINHO_DOCKERFILE/Dockerfile -t NOME_USUARIO/NOME_IMAGEM : gera uma imagem com o caminho informado.
+
+ Disponibilizando imagem remoto:
+    >> Obrigatório possuir uma conta no DockerHub <<
+    
+  COMANDOS: 
+      docker login : acessar o repositório remoto pelo terminal
+      docker push USER_NAME/IMAGE_NAME : envia
+      docker pull USER_NAME/IMAGE_NAME : baixa
+
+
+>>>>>>> CONTAINERS <<<<<<<
+
+  >>>>>>> Criar <<<<<<<
+
+    docker run NOME_DO_REPOSITORIO/NOME_PROJETO : instala e cria um container remoto
+    docker run IMAGE_NAME : cria um container com a imagem informada
+              -it : integra com o terminal local com o terminal do container
+              -d  : não trava o terminal
+              -P  : gera uma porta aleatória para uso externo
+              -p EXTERNAL:CONTAINER_PORT : informa em qual porta o container será iniciado
+              -e VARIABLE="VALUE": variáveis de ambiente
+              --name CUSTOM_NAME: define um alias para o container
+
+  >>>>>>> Iniciar <<<<<<<
+
+    docker start CONTAINER_ID : inicia um container parado
+    docker start -a -i CONTAINER_ID : inicia um container e integra com o terminal
+
+  >>>>>>> Parar <<<<<<<
+
+    docker stop CONTAINER_ID : derruba um container em execução
+    docker stop $(docker ps -q) : derruba TODOS os containers em execução (espera 10s)
+    docker stop -t 0 $(docker ps -q) : derruba TODOS os containers em execução na hora
+
+  >>>>>>> Monitoramento <<<<<<<
+
+    docker ps : lista os containers em execução
+              -a : lista todos os containers 
+              -q : lista todos os CONTAINER_ID
+
+    docker port CONTAINER_ID : lista todas as portas do container
+
+    docker inspect CONTAINER_ID : mostra informações do container
+
+  >>>>>>> Remover <<<<<<<
+
+    docker rm CONTAINER_ID : remove um container
+    docker container prune : remove todos os containers inativos
+
+
+>>>>>>> VOLUMES <<<<<<<
+
+  docker run -it -v "CAMINHO_LOCAL:CAMINHO_CONTAINER" ubuntu  : cria volume
+  docker run -p 8080:3000 -v "$(pwd):/var/www" -w "/var/www" node npm start : executando código em um container
+
+>>>>>>> NETWORK <<<<<<<
+
+  hostname -i : mostra o ip atribuído ao container pelo docker (funciona apenas dentro do container).
+  docker network create --driver bridge NOME_DA_REDE : cria uma rede especificando o driver desejado.
+  docker run -it --name NOME_CONTAINER --network NOME_DA_REDE NOME_IMAGEM : cria um container especificando seu nome e qual rede deverá ser usada.
+
+>>>>>>> DOCKER-COMPOSE <<<<<<<
+
+  Orquestracao de containers : 
+    docker-compose up : sobe os serviços criados
+    docker-compose down : para os serviços criados.
+    docker-compose ps : lista os serviços que estão rodando.
