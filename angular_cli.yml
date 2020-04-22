@@ -1,0 +1,83 @@
+TODO: :********* COMANDOS ANGULAR CLI *************:
+
+https://github.com/angular/angular-cli : documentação 
+
+npm install -g angular-cli : instalar via node
+
+
+
+:*** BASIC ***:
+
+ng new _name_project_ : criar novo projeto angular
+
+ng g c _name_component_ : componente
+ng g c data-binding --skip-tests=true : componente sem arquivo de test
+	
+ng g m _name_ : modulo
+ng g s _name_ : service
+ng g d _name_ : directive
+ng g p _name_ : pipe
+ng g i _name_ : interface
+ng g e _name_ : enum
+ng g class _name_ : class
+
+
+
+:*** STYLES ***:
+
+ng new  _name_project_ --style= _option_ : criar projeto com estilo configurado
+ng set defaults.styleExt _option_ : mudar o padrão de estilo do projeto. _option_ =  scss | less | styl
+
+
+
+:*** TESTS ***:
+
+ng lint : verifica a sintaxe e style guide do projeto
+ng test : executa os arquivos .spec para tdd e bdd com o jasmine / karma (análise e cobertura)
+ng e2e : ferramenta protractor para testes de integração
+
+
+
+:*** BUILD ***:
+
+ng build : desenvolvimento
+ng build --prod: produção
+
+npm i http-server -g : instala global um emulador de servidor simples // caso ainda não esteja instalado
+http-server : executar comando na pasta do dist apos o comando de build
+
+
+
+TODO: :********* BIBLIOTECAS EXTERNAS *************:
+
+---------------------------------------------------------------------------------------------------
+	npm i --save lodash : possui funcoes uteis para desenvolvimento. https://lodash.com/docs/4.17.15
+
+	npm i --save @types/lodash : necessario para o ts saber como manipular a lib externa
+
+	import * as _ from 'lodash' : adicionar no componente
+---------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------
+	npm i bootstrap --save : ultima versao
+	npm i bootstrap@version --save : alguma especifica
+
+	: opções de importação :
+
+			Configure angular.json:
+
+				"styles": [
+					"node_modules/bootstrap/dist/css/bootstrap.min.css",
+					"styles.scss"
+				]
+			
+			Import directly in src/style.css or src/style.scss:
+
+				@import '~bootstrap/dist/css/bootstrap.min.css';
+	
+
+:**** ngx-bootstrap ******:
+
+	npm i ngx-bootstrap --save : lib para bootstrap 3/4 com codigo angular. https://valor-software.com/ngx-bootstrap/#/documentation
+
+---------------------------------------------------------------------------------------------------
